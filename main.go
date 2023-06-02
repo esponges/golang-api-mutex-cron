@@ -11,6 +11,14 @@ import (
 )
 
 // TheStruct for the routing handler
+type IncrementJob struct {
+	myInstance *MyStruct
+}
+
+func (j IncrementJob) Run() {
+	j.myInstance.IncrementGlobalVariable()
+	fmt.Println("Incremented global variable", j.myInstance.GetGlobalVariable())
+}
 
 func main() {
 	// Create an instance of the struct
@@ -33,9 +41,9 @@ func main() {
 	c := cron.New()
 
 	// Add a new cron job that runs the IncrementGlobalVariable method every 10 seconds
-	c.AddFunc("*/10 * * * * *", func() {
-		myInstance.IncrementGlobalVariable()
-	})
+	incrementJob := IncrementJob{myInstance: myInstance}
+	fmt.Println("Adding cron job")
+	c.AddJob("@every 10s", incrementJob)
 
 	// Start the cron instance
 	c.Start()
