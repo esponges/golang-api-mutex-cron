@@ -18,6 +18,7 @@ type IncrementJob struct {
 func (j IncrementJob) Run() {
 	j.myInstance.IncrementGlobalVariable()
 	fmt.Println("Incremented global variable", j.myInstance.GetGlobalVariable())
+	// could it request the increment endpoint here instead of calling the method?
 }
 
 func main() {
@@ -34,7 +35,7 @@ func main() {
 	router := mux.NewRouter()
 
 	// Register your API endpoints using Gorilla Mux router
-	router.HandleFunc("/", myInstance.Handler).Methods("GET")
+	router.HandleFunc("/increment", myInstance.Handler).Methods("GET")
 	router.HandleFunc("/read", myInstance.ReadHandler).Methods("GET")
 
 	// Create a new cron instance
@@ -84,12 +85,9 @@ func incrementGlobalVariable(m *MyStruct) {
 	ticker := time.NewTicker(time.Hour)
 	defer ticker.Stop()
 
-	for {
-		select {
-		case <-ticker.C:
-			// Increment the global variable
-			m.IncrementGlobalVariable()
-		}
+	for range ticker.C {
+		// Increment the global variable
+		m.IncrementGlobalVariable()
 	}
 }
 
