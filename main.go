@@ -13,11 +13,13 @@ import (
 // TheStruct for the routing handler
 type IncrementJob struct {
 	myInstance *MyStruct
+	someArg    string
 }
 
 func (j IncrementJob) Run() {
 	j.myInstance.IncrementGlobalVariable()
 	fmt.Println("Incremented global variable", j.myInstance.GetGlobalVariable())
+	fmt.Println("someArg", j.someArg)
 	// could it request the increment endpoint here instead of calling the method?
 }
 
@@ -42,7 +44,7 @@ func main() {
 	c := cron.New()
 
 	// Add a new cron job that runs the IncrementGlobalVariable method every 10 seconds
-	incrementJob := IncrementJob{myInstance: myInstance}
+	incrementJob := IncrementJob{myInstance: myInstance, someArg: "someArgh"}
 	fmt.Println("Adding cron job")
 	c.AddJob("@every 10s", incrementJob)
 
