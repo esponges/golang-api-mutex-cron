@@ -1,0 +1,8 @@
+
+# increment global variable
+GET http://localhost:8080/
+
+### 
+
+# get global variable
+GET http://localhost:8080/read
